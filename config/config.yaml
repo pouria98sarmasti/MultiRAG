@@ -1,0 +1,78 @@
+# MultiRAG Configuration File
+
+# Application settings
+app:
+  name: "MultiRAG"
+  version: "0.1.0"
+  debug: true
+  host: "0.0.0.0"
+  port: 7744
+  cors:
+    # allow_credentials: true
+    allow_credentials: false
+    allow_origins:
+      # - "http://localhost:7744"
+      # - "http://127.0.0.1:7744"
+      - "*"
+
+# Logging configuration
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  rotation_days: 30
+
+# Database settings
+database:
+  type: "postgresql"
+  host: "localhost"
+  port: 5433
+  database: "vector_db"
+  user: "vector_user"
+  password: "vector_pass1234"
+  pool_size: 10
+  max_overflow: 20
+  echo_sql: false  # Set to true for SQL debugging
+  
+  # Vector settings
+  vector:
+    dimension: 1024  # Embedding dimension
+
+# LLM settings
+llm:
+  chat:
+    model: "gemma3:4b"
+    temperature: 0.1
+    max_tokens: 1024
+    top_p: 0.9
+    ollama_url: "http://localhost:11434"
+    num_ctx: 2048
+    
+  embedding:
+    model: "jinaai/jina-embeddings-v3"
+    vector_size: 1024
+    offline: true
+  
+  reranker:
+    model: "jinaai/jina-reranker-v2-base-multilingual"
+
+# RAG configuration
+rag:
+  chunk_size: 1000
+  chunk_overlap: 200
+  search_type: "similarity_score_threshold"  # similarity, mmr
+  k_retrieval: 5  # Number of chunks to retrieve
+  score_threshold: 0.5
+  
+# Upload settings
+uploads:
+  max_file_size_mb: 50
+  allowed_extensions:
+    - "pdf"
+    - "docx"
+    - "csv"
+  storage_path: "./data"
+
+# Security settings
+security:
+  token_expiration_minutes: 60
+  secret_key: "CHANGE_THIS_TO_A_STRONG_SECRET_KEY"
+  algorithm: "HS256" 

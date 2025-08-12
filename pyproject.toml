@@ -1,0 +1,43 @@
+[project]
+name = "multirag"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = [
+    "docx2txt==0.9",
+    "einops==0.8.1",
+    "fastapi[standard]==0.115.12",
+    "langchain==0.3.25",
+    "langchain-huggingface==0.3.0",
+    "langchain-ollama==0.3.3",
+    "langchain-postgres==0.0.15",
+    "langgraph==0.4.8",
+    "langgraph-checkpoint-postgres==2.0.21",
+    "pandas==2.2.3",
+    "psycopg[binary,pool]==3.2.9",
+    "pypdf==5.8.0",
+    "pytz==2025.2",
+    "pyyaml==6.0.2",
+    "rich==14.0.0",
+    "sentence-transformers==4.1.0",
+    "sqlalchemy==2.0.41",
+    "torch==2.6.0",
+]
+
+
+
+
+
+
+
+[build-system]
+requires = ["setuptools==80.9.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[dependency-groups]
+dev = [
+    "ipykernel>=6.29.5",
+    "pytest==8.4.1",
+]
