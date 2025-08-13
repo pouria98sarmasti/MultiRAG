@@ -24,12 +24,12 @@ from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.messages import AIMessage, HumanMessage, AnyMessage, SystemMessage, BaseMessage
 
 
-from src.utils.logger import setup_logger
+from src.utils.logger import app_logger
 from src.operations._memory import memory_service
 from src.operations._chat_history import chat_history_service
 from src.llm._llm_setup import get_chat_model
 
-logger = setup_logger(__name__)
+logger = app_logger.getChild("src.llm._base_llm")
 
 
 class BaseLLM(ABC):

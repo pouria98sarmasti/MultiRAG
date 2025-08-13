@@ -19,12 +19,12 @@ from typing import List
 from src.operations._db_setup import get_pg_engine, drop_table
 from src.llm._llm_setup import get_embedding_model
 from src.utils.config import get_config
-from src.utils.logger import setup_logger
+from src.utils.logger import app_logger
 
 
 
 
-logger = setup_logger(__name__)
+logger = app_logger.getChild("src.operations._vector_db")
 
 
 

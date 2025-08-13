@@ -8,9 +8,9 @@ from src.models._llm import RAGSystem
 from src.models._user import User
 from src.models._association_tables import UserRAGSystemJunction
 from src.operations._db_setup import get_sqlalchemy_db
-from src.utils.logger import setup_logger
+from src.utils.logger import app_logger
 
-logger = setup_logger(__name__)
+logger = app_logger.getChild("src.operations._association")
 
 
 

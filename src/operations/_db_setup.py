@@ -24,12 +24,12 @@ from src.models._base_sqlalchemy import Base
 from src.models import (_user, _admin, _association_tables, _llm)
 
 from src.utils.config import get_config
-from src.utils.logger import setup_logger
+from src.utils.logger import app_logger
 from src.llm._llm_setup import get_embedding_model
 from src.utils.config import get_config
 
 
-logger = setup_logger(__name__)
+logger = app_logger.getChild("src.operations._db_setup")
 
 # Build database URI from config
 DB_HOST = get_config("database.host")

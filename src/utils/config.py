@@ -10,10 +10,10 @@ from typing import Any, Dict, Union
 
 import yaml
 
-from src.utils.logger import setup_logger
+from src.utils.logger import app_logger
 
 # Set up logger
-logger = setup_logger(__name__)
+logger = app_logger.getChild("src.utils.config")
 
 class ConfigurationError(Exception):
     """Exception raised for configuration errors."""

@@ -10,9 +10,9 @@ import uuid
 from src.operations._db_setup import get_sqlalchemy_db
 from src.models._user import UserUploadedDatasetType, UserUploadedDataset, User
 from src.schema._user import ListAllUsersOutput, UserCreateOutput
-from src.utils.logger import setup_logger
+from src.utils.logger import app_logger
 
-logger = setup_logger(__name__)
+logger = app_logger.getChild("src.operations._user")
 
 
 

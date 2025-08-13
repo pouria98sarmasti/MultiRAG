@@ -6,7 +6,8 @@ app:
   version: "0.1.0"
   debug: true
   host: "0.0.0.0"
-  port: 7744
+  # port: 7744
+  port: 2011
   cors:
     # allow_credentials: true
     allow_credentials: false
@@ -39,15 +40,16 @@ database:
 # LLM settings
 llm:
   chat:
-    model: "gemma3:4b"
+    model: "gemma3:12b"
     temperature: 0.1
     max_tokens: 1024
     top_p: 0.9
-    ollama_url: "http://localhost:11434"
+    ollama_url: "http://localhost:11400"
     num_ctx: 2048
     
   embedding:
-    model: "jinaai/jina-embeddings-v3"
+    # model: "jinaai/jina-embeddings-v3"
+    model: "jeffh/intfloat-multilingual-e5-large-instruct:f32"
     vector_size: 1024
     offline: true
   
@@ -56,10 +58,12 @@ llm:
 
 # RAG configuration
 rag:
-  chunk_size: 1000
-  chunk_overlap: 200
+  # chunk_size: 1000
+  chunk_size: 800
+  chunk_overlap: 400
+  # chunk_overlap: 200
   search_type: "similarity_score_threshold"  # similarity, mmr
-  k_retrieval: 5  # Number of chunks to retrieve
+  k_retrieval: 1  # Number of chunks to retrieve
   score_threshold: 0.5
   
 # Upload settings

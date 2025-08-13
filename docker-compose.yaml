@@ -1,0 +1,24 @@
+services:
+  ollama:
+    image: docker.arvancloud.ir/ollama/ollama:latest
+    container_name: ollama-repo
+    runtime: nvidia
+    environment:
+        - NVIDIA_VISIBLE_DEVICES=all
+    ports:
+      - 11400:11434
+    volumes:
+      - ${PWD}/.ollama:/root/.ollama
+  
+
+  pgvector:
+    image: docker.arvancloud.ir/pgvector/pgvector:pg17
+    container_name: pgvector_db
+    ports:
+      - 5433:5432
+    volumes:
+      - ${PWD}/pgvector:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=vector_user
+      - POSTGRES_PASSWORD=vector_pass1234
+      - POSTGRES_DB=vector_db

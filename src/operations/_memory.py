@@ -9,10 +9,10 @@ import uuid
 from typing import List, Dict, Any, Optional
 
 
-from src.utils.logger import setup_logger
+from src.utils.logger import app_logger
 from src.operations._db_setup import get_memory_db
 
-logger = setup_logger(__name__)
+logger = app_logger.getChild("src.operations._memory")
 
 
 class MemoryService:

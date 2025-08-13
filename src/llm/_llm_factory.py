@@ -14,9 +14,9 @@ from src.operations._admin import AdminUploadedDatasetInfoOperations
 from src.operations._user import UserUploadedDatasetOperation
 from src.schema._llm import LLMType
 
-from src.utils.logger import setup_logger
+from src.utils.logger import app_logger
 
-logger = setup_logger(__name__)
+logger = app_logger.getChild("src.llm._llm_factory")
 
 
 async def create_llm(

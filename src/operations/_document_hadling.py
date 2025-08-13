@@ -13,9 +13,9 @@ from langchain_core.documents import Document
 from src.schema._admin import AdminUploadedDatasetType
 
 
-from src.utils.logger import setup_logger
+from src.utils.logger import app_logger
 
-logger = setup_logger(__name__)
+logger = app_logger.getChild("src.operations._document_handling")
 
 
 

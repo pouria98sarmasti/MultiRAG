@@ -5,10 +5,10 @@ from langchain_core.messages import HumanMessage, AIMessage
 
 
 from src.operations._db_setup import get_psycopg_db, drop_table
-from src.utils.logger import setup_logger
+from src.utils.logger import app_logger
 
 
-logger = setup_logger(__name__)
+logger = app_logger.getChild("src.operations._chat_history")
 
 
 class ChatHistoryService:

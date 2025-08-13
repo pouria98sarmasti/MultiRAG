@@ -11,10 +11,10 @@ from src.models._llm import ChatSession, RAGSystem
 from src.schema._llm import CreateRAGSystemOutput, LLMType
 from src.models._base_sqlalchemy import CURRENT_TIME
 from src.schema._llm import AvailableRAGSystemsOutput
-from src.utils.logger import setup_logger
+from src.utils.logger import app_logger
 
 
-logger = setup_logger(__name__)
+logger = app_logger.getChild("src.operations._llm")
 
 
 

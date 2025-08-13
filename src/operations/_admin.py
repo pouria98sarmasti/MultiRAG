@@ -11,9 +11,9 @@ import uuid
 from src.operations._db_setup import get_sqlalchemy_db
 from src.models._admin import AdminUploadedDatasetInfo, AdminUploadedDatasetContent
 from src.schema._admin import AdminUploadedDatasetType
-from src.utils.logger import setup_logger
+from src.utils.logger import app_logger
 
-logger = setup_logger(__name__)
+logger = app_logger.getChild("src.operations._admin")
 
 class AdminUploadedDatasetContentOperations:
     def __init__(self) -> None:
