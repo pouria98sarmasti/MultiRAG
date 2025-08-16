@@ -42,6 +42,7 @@ class ChatSession(Base):
     user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("user.id", ondelete="CASCADE"), index=True, nullable=False)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     llm_type: Mapped[LLMType] = mapped_column(SQLEnum(LLMType), nullable=False)
+    rag_system_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("rag_system.id", ondelete="CASCADE"), nullable=True)
     created_at: Mapped[DateTime] = mapped_column(DateTime, default_factory=CURRENT_TIME)
     last_active: Mapped[DateTime] = mapped_column(DateTime, default_factory=CURRENT_TIME)
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, index=True, nullable=False, default_factory=uuid.uuid4)

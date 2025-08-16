@@ -81,11 +81,12 @@ class ChatSessionOperations:
         self.session = get_sqlalchemy_db
     
     
-    async def create(self, name: str, llm_type: LLMType, user_id: uuid.UUID):
+    async def create(self, name: str, llm_type: LLMType, user_id: uuid.UUID, rag_system_id: uuid.UUID | None = None):
         chat_session = ChatSession(
             user_id=user_id,
             name=name,
             llm_type=llm_type,
+            rag_system_id=rag_system_id,
         )
         
         async with self.session() as session:

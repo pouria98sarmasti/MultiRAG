@@ -9,6 +9,7 @@ class CreateChatSessionInput(BaseModel):
     name: str
     llm_type: LLMType
     user_id: uuid.UUID
+    rag_system_id: uuid.UUID | None = None
 
 
 class ReturnChatHistoryInput(BaseModel):
@@ -25,5 +26,5 @@ class ChatInput(BaseModel):
     llm_type: LLMType
     user_id: uuid.UUID
     session_id: uuid.UUID
-    dataset_id: uuid.UUID | None
+    rag_system_id: uuid.UUID | None = None
     user_prompt: str

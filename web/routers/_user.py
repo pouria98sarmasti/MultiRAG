@@ -6,7 +6,7 @@ from fastapi.responses import StreamingResponse
 
 from src.llm._llm_factory import create_llm
 from src.operations._chat_history import chat_history_service
-from src.operations._llm import ChatSessionOperations, RAGSystemOperations
+from src.operations._llm import ChatSessionOperations
 from web.schema._user import ChatInput, CreateChatSessionInput, DeleteChatSessionInput, ReturnChatHistoryInput
 
 
@@ -22,23 +22,13 @@ user_router = APIRouter(tags=["User"])
 
 
 
-@user_router.get("/models")
-async def list_available_models():
-    rag_systems = await RAGSystemOperations().list_available_rag_systems()
-    available_models = {
-        "simple": "simple",
-        "user_rag": "user_rag",
-        "rag": rag_systems,
-    }
-
-    return available_models
-
 @user_router.post("/chat/create")
 async def create_chat_session(data: CreateChatSessionInput = Body()):
     chat_session = await ChatSessionOperations().create(
         name=data.name,
         llm_type=data.llm_type,
         user_id=data.user_id,
+        rag_system_id=data.rag_system_id,
     )
 
     return chat_session
@@ -76,8 +66,9 @@ async def chat(data: ChatInput = Body()):
         llm_type=data.llm_type,
         user_id=data.user_id,
         session_id=data.session_id,
-        dataset_id=data.dataset_id,
+        rag_system_id=data.rag_system_id,
     )
+    await ChatSessionOperations().update_last_active(session_id=data.session_id)
 
     return StreamingResponse(
         content=llm.generate_chat_response(user_query=data.user_prompt),

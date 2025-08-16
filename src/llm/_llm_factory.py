@@ -11,6 +11,7 @@ from src.llm._simple_llm import SimpleLLM
 from src.llm._rag_llm import RAGLLM
 from src.llm._user_rag_llm import UserRAGLLM
 from src.operations._admin import AdminUploadedDatasetInfoOperations
+from src.operations._llm import RAGSystemOperations
 from src.operations._user import UserUploadedDatasetOperation
 from src.schema._llm import LLMType
 
@@ -24,7 +25,7 @@ async def create_llm(
     user_id: uuid.UUID,
     session_id: uuid.UUID,
     history_limit: int = 5,
-    dataset_id: uuid.UUID | None = None,
+    rag_system_id: uuid.UUID | None = None,
 ) -> BaseLLM:
 
     if llm_type == LLMType.SIMPLE:
@@ -33,8 +34,11 @@ async def create_llm(
         
     elif llm_type in (LLMType.RAG, LLMType.USER_RAG):
         # Check if RAG dataset ID is provided
-        if dataset_id is None:
-            error_msg = f"RAG dataset ID is required for LLM type {llm_type.value}"
+        if rag_system_id:
+            rag_system_obj = await RAGSystemOperations().get(rag_system_id=rag_system_id)
+            dataset_id = rag_system_obj.dataset_id
+        else:
+            error_msg = f"RAG system ID is required for LLM type {llm_type.value}"
             logger.error(error_msg)
             raise ValueError(error_msg)
             

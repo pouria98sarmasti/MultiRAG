@@ -107,6 +107,17 @@ async def delete_dataset_and_rag_system(dataset_id: uuid.UUID):
 
 #### rag systems management
 
+@admin_router.get("/models", tags=["Admin-RAG System Management"])
+async def list_available_models():
+    rag_systems = await RAGSystemOperations().list_available_rag_systems()
+    available_models = {
+        "simple": "simple",
+        "user_rag": "user_rag",
+        "rag": rag_systems,
+    }
+
+    return available_models
+
 @admin_router.get("/rag_system", tags=["Admin-RAG System Management"])
 async def list_available_rag_systems():
     rag_systems = await RAGSystemOperations().list_available_rag_systems()

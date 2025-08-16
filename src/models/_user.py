@@ -41,9 +41,8 @@ class User(Base):
         init=False,
         lazy="selectin",
         collection_class=list,
-        # cascade="all, delete-orphan", # ? is correct
+        cascade="all, delete-orphan",
     )
-    # id: Mapped[uuid.UUID] = mapped_column(primary_key=True, index=True, nullable=False, default_factory=uuid.uuid4)
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, index=True, nullable=False)
 
 
