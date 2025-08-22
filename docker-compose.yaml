@@ -2,6 +2,7 @@ services:
   ollama:
     image: docker.arvancloud.ir/ollama/ollama:latest
     container_name: ollama-repo
+    restart: unless-stopped
     runtime: nvidia
     environment:
         - NVIDIA_VISIBLE_DEVICES=all
@@ -14,6 +15,7 @@ services:
   pgvector:
     image: docker.arvancloud.ir/pgvector/pgvector:pg17
     container_name: pgvector_db
+    restart: unless-stopped
     ports:
       - 5433:5432
     volumes:
