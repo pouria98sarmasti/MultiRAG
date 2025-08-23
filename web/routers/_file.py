@@ -99,3 +99,18 @@ async def download_file(data: DownloadFileInput = Depends()):
         filename=file_name,
         media_type="application/octet-stream"
     )
+
+
+@file_router.get("/filename")
+async def get_filename(data: DownloadFileInput = Depends()):
+    
+    try:
+
+        dataset_info = await AdminUploadedDatasetInfoOperations().get_by_dataset_id(dataset_id=data.dataset_id)
+        dataset_name = dataset_info.dataset_name
+        dataset_extension = dataset_info.dataset_type.value
+        filename = dataset_name + "." + dataset_extension
+
+    except Exception: raise FileNotFound
+
+    return {"filename": filename}
