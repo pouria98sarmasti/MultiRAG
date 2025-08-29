@@ -181,10 +181,12 @@ class RAGLLM(BaseLLM):
         builder = StateGraph(RAGLLMStates)
         
         builder.add_node("_retrieve_node", self._retrieve_node)
+        builder.add_node("_specify_context_relevance", self._specify_context_relevance)
         builder.add_node("_generation_node", self._generation_node)
         
         builder.add_edge(START, "_retrieve_node")
-        builder.add_edge("_retrieve_node", "_generation_node")
+        builder.add_edge("_retrieve_node", "_specify_context_relevance")
+        builder.add_edge("_specify_context_relevance", "_generation_node")
         builder.add_edge("_generation_node", END)
         
         graph = builder.compile()
