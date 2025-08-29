@@ -22,7 +22,7 @@ from collections.abc import AsyncGenerator
 from src.operations._vector_db import vector_db_service
 from src.llm._base_llm import BaseLLM
 from src.llm._prompts import RAGLLM_Prompt
-from src.llm._states import RAGLLMStates
+from src.llm._states import RAGLLMStates, RelevanceContext
 
 
 
@@ -56,15 +56,29 @@ class RAGLLM(BaseLLM):
 
 
     @override
-    def _get_system_prompt(self) -> SystemMessage:
-        return SystemMessage(content=RAGLLM_Prompt.system)
+    def _get_system_prompt(self, mode: str) -> SystemMessage:
+        if mode == "no_context":
+            return SystemMessage(content=RAGLLM_Prompt.system_no_context)
+        elif mode == "insufficient_context":
+            return SystemMessage(content=RAGLLM_Prompt.system_insufficient_context)
+        elif mode == "sufficient_context":
+            return SystemMessage(content=RAGLLM_Prompt.system_sufficient_context)
+
     
     def _get_rag_prompt(self) -> PromptTemplate:
         rag_prompt_template = PromptTemplate.from_template(RAGLLM_Prompt.rag)
         
         return rag_prompt_template
     
+    def _get_relevance_instruction(self):
+        return SystemMessage(content=RAGLLM_Prompt.relevance_grader_instruction)
     
+
+    def _get_relevance_prompt(self):
+        relevance_prompt_template = PromptTemplate.from_template(RAGLLM_Prompt.relevance_grader_prompt)
+        return relevance_prompt_template
+
+
     async def _retrieve_node(self, state: RAGLLMStates, config: RunnableConfig):
         query = state["messages"][-1].content
         retrieved_docs = await self.vector_db.search(
@@ -86,25 +100,78 @@ class RAGLLM(BaseLLM):
         return {"retrieved_docs": retrieved_docs, "context": context}
     
 
+    
+
+    async def _specify_context_relevance(self, state: RAGLLMStates, config: RunnableConfig):
+
+        system_prompt = self._get_relevance_instruction()
+        relevance_prompt = self._get_relevance_prompt().format(
+            document=state["context"],
+            question=state["messages"][-1].content,
+        )
+        relevance_message = HumanMessage(content=relevance_prompt)
+
+        relevance_grade = await self.chat_model.with_structured_output(RelevanceContext).ainvoke([system_prompt] + [relevance_message])
+
+        if relevance_grade.binary_score == "yes":
+            return {"does_use_context": "yes"}
+        else:
+            return {"does_use_context": "no"}
+
+
+
+
+
     @override
     async def _generation_node(self, state: RAGLLMStates, config: RunnableConfig):
         
-        system_message = self._get_system_prompt()
-        chat_history = state["messages"][:-1]
-        if chat_history:
-            chat_history = self._custom_trim_messages(chat_history)
+        if state["context"] == "Relievent context was not found.":
+            system_message = self._get_system_prompt(mode="no_context")
+            chat_history = state["messages"][:-1]
+            if chat_history:
+                chat_history = self._custom_trim_messages(chat_history)
+            
+            user_message = HumanMessage(content=state["messages"][-1].content)
+            
+            response = await self.chat_model.ainvoke(
+                [system_message] + chat_history + [user_message]
+            )
+            
+            return {"messages": response}
+
+
+        elif state["does_use_context"] == "yes":
+            system_message = self._get_system_prompt(mode="sufficient_context")
+            chat_history = state["messages"][:-1]
+            if chat_history:
+                chat_history = self._custom_trim_messages(chat_history)
+            
+            rag_prompt = self._get_rag_prompt().format(
+                user_query=state["messages"][-1].content,
+                context=state["context"],
+            )
+            rag_message = HumanMessage(content=rag_prompt)
+            
+            response = await self.chat_model.ainvoke(
+                [system_message] + chat_history + [rag_message]
+            )
+            
+            return {"messages": response}
         
-        rag_prompt = self._get_rag_prompt().format(
-            user_query=state["messages"][-1].content,
-            context=state["context"],
-        )
-        rag_message = HumanMessage(content=rag_prompt)
-        
-        response = await self.chat_model.ainvoke(
-            [system_message] + chat_history + [rag_message]
-        )
-        
-        return {"messages": response}
+
+        else:
+            system_message = self._get_system_prompt(mode="insufficient_context")
+            chat_history = state["messages"][:-1]
+            if chat_history:
+                chat_history = self._custom_trim_messages(chat_history)
+            
+            user_message = HumanMessage(content=state["messages"][-1].content)
+            
+            response = await self.chat_model.ainvoke(
+                [system_message] + chat_history + [user_message]
+            )
+            
+            return {"messages": response}
         
     
     @override

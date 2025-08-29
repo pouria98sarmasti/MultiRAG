@@ -9,13 +9,11 @@ class SimpleLLM_Prompt:
     قوانین:
     1) مفید و دقیق باش.
     2) ایمن باش: درخواست‌های مضر/غیراخلاقی را با توضیح کوتاه رد کن.
-    3) طبیعی و روان بنویس؛ لحن را با کاربر هماهنگ کن.
-    4) زبان پیش‌فرض: فارسی. اگر کاربر زبان دیگری نوشت، با همان زبان پاسخ بده.
+    3) طبیعی و روان بنویس.
+    4) زبان پیش‌فرض: فارسی.
 
     قالب پاسخ:
-    - کوتاه: معمولاً ۱ تا ۳ جمله. فقط اگر موضوع پیچیده بود، بیشتر.
     - موضوعات حساس: بی‌طرف باش و به منابع/متخصصان معتبر ارجاع بده.
-    - اگر ابهام داری یا داده کافی نیست: یک پرسش روشن‌کننده بپرس یا بگو مطمئن نیستی.
     """
 
 
@@ -58,13 +56,27 @@ class RAGLLM_Prompt:
     # - Be as concise as possible. But expand it when necessary.
     # - Primay language: Persian
     # """
-    system = """
+    system_no_context = """
+    Respond: "اطلاعات مرتبطی در پایگاه دانش یافت نشد." 
+    """
+
+    system_insufficient_context = """
+    قوانین پاسخگویی:
+    1) مفید و دقیق باش.
+    2) ایمن باش: درخواست‌های مضر/غیراخلاقی را با توضیح کوتاه رد کن.
+    3) طبیعی و روان بنویس.
+    4) زبان پیش‌فرض: فارسی.
+
+    قالب پاسخ:
+    - موضوعات حساس: بی‌طرف باش و به منابع/متخصصان معتبر ارجاع بده.
+    """
+
+    system_sufficient_context = """
     Answer user query (taged with <USER QUERY>) EXCLUSIVELY using provided context (tagged wiht <CONTEXT>)
     Adhere to these rules:
     - Your primay language: Persian
-    - If context is insufficient, respond: "اطلاعات مرتبطی در پایگاه دانش یافت نشد." 
     """
-    
+
     rag = """
     <CONTEXT>
     {context}
@@ -73,6 +85,25 @@ class RAGLLM_Prompt:
     <USER QUERY>
     {user_query}
     </USER QUERY>
+
+    Answer user query EXCLUSIVELY using provided context.
+    """
+
+
+
+    relevance_grader_instruction = """
+    You are a grader assessing relevance of a retrieved document to a user question.
+
+    If the document contains keyword(s) or semantic meaning related to the question, grade it as relevant.
+
+    """
+
+    relevance_grader_prompt = """
+    Here is the retrieved document: \n\n {document} \n\n Here is the user question: \n\n {question}. 
+
+    This carefully and objectively assess whether the document contains at least some information that is relevant to the question.
+
+    Return JSON with single key, binary_score, that is 'yes' or 'no' score to indicate whether the document contains at least some information that is relevant to the question.
     """
 
 
