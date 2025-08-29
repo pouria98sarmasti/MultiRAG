@@ -123,7 +123,7 @@ class BaseLLM(ABC):
         return trimmed_messages
 
     @abstractmethod
-    def _get_system_prompt(self) -> SystemMessage:
+    def _get_system_prompt(self, mode: str | None = None) -> SystemMessage:
         pass
     
     @abstractmethod

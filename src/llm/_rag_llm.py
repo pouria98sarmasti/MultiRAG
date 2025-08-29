@@ -56,12 +56,13 @@ class RAGLLM(BaseLLM):
 
 
     @override
-    def _get_system_prompt(self, mode: str) -> SystemMessage:
+    def _get_system_prompt(self, mode: str | None = None) -> SystemMessage:
         if mode == "no_context":
             return SystemMessage(content=RAGLLM_Prompt.system_no_context)
         elif mode == "insufficient_context":
             return SystemMessage(content=RAGLLM_Prompt.system_insufficient_context)
-        elif mode == "sufficient_context":
+        # elif mode == "sufficient_context":
+        else:
             return SystemMessage(content=RAGLLM_Prompt.system_sufficient_context)
 
     

@@ -47,7 +47,7 @@ class SimpleLLM(BaseLLM):
     
     
     @override
-    def _get_system_prompt(self) -> SystemMessage:
+    def _get_system_prompt(self, mode: str | None = None) -> SystemMessage:
         return SystemMessage(content=SimpleLLM_Prompt.system)
     
     @override
