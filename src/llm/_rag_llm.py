@@ -116,7 +116,7 @@ class RAGLLM(BaseLLM):
 
         if relevance_grade.binary_score == "yes":
             return {"does_use_context": "yes"}
-        else:
+        elif relevance_grade.binary_score == "no":
             return {"does_use_context": "no"}
 
 
