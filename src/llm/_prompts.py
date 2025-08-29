@@ -57,7 +57,7 @@ class RAGLLM_Prompt:
     # - Primay language: Persian
     # """
     system_no_context = """
-    Respond: "اطلاعات مرتبطی در پایگاه دانش یافت نشد." 
+    Just output this sentence, not even a word more: "اطلاعات مرتبطی در پایگاه دانش یافت نشد." 
     """
 
     system_insufficient_context = """
@@ -94,16 +94,14 @@ class RAGLLM_Prompt:
     relevance_grader_instruction = """
     You are a grader assessing relevance of a retrieved document to a user question.
 
-    If the document contains keyword(s) or semantic meaning related to the question, grade it as relevant.
+    If the document contains the answer of the question, grade it as relevant.
 
     """
 
     relevance_grader_prompt = """
-    Here is the retrieved document: \n\n {document} \n\n Here is the user question: \n\n {question}. 
+    Here is the retrieved document: \n\n {document} \n\n Here is the user question: \n\n {question}.
 
-    This carefully and objectively assess whether the document contains at least some information that is relevant to the question.
-
-    Return JSON with single key, binary_score, that is 'yes' or 'no' score to indicate whether the document contains at least some information that is relevant to the question.
+    If the document contains the answer of the question, grade it as relevant.
     """
 
 

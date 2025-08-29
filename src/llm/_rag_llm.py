@@ -96,7 +96,7 @@ class RAGLLM(BaseLLM):
             #         chunks.append(f"<CHUNK id=\"{i}\">\n{content}\n</CHUNK>")
             # context = "\n\n".join(chunks)
         else:
-            context = "Relievent context was not found."
+            context = ""
         
         return {"retrieved_docs": retrieved_docs, "context": context}
     
@@ -126,16 +126,13 @@ class RAGLLM(BaseLLM):
     @override
     async def _generation_node(self, state: RAGLLMStates, config: RunnableConfig):
         
-        if state["context"] == "Relievent context was not found.":
+        if state["context"] == "":
             system_message = self._get_system_prompt(mode="no_context")
-            chat_history = state["messages"][:-1]
-            if chat_history:
-                chat_history = self._custom_trim_messages(chat_history)
             
             user_message = HumanMessage(content=state["messages"][-1].content)
             
             response = await self.chat_model.ainvoke(
-                [system_message] + chat_history + [user_message]
+                [system_message] + [user_message]
             )
             
             return {"messages": response}
@@ -143,9 +140,9 @@ class RAGLLM(BaseLLM):
 
         elif state["does_use_context"] == "yes":
             system_message = self._get_system_prompt(mode="sufficient_context")
-            chat_history = state["messages"][:-1]
-            if chat_history:
-                chat_history = self._custom_trim_messages(chat_history)
+            # chat_history = state["messages"][:-1]
+            # if chat_history:
+            #     chat_history = self._custom_trim_messages(chat_history)
             
             rag_prompt = self._get_rag_prompt().format(
                 user_query=state["messages"][-1].content,
@@ -154,7 +151,8 @@ class RAGLLM(BaseLLM):
             rag_message = HumanMessage(content=rag_prompt)
             
             response = await self.chat_model.ainvoke(
-                [system_message] + chat_history + [rag_message]
+                # [system_message] + chat_history + [rag_message]
+                [system_message] + [rag_message]
             )
             
             return {"messages": response}
@@ -162,14 +160,15 @@ class RAGLLM(BaseLLM):
 
         else:
             system_message = self._get_system_prompt(mode="insufficient_context")
-            chat_history = state["messages"][:-1]
-            if chat_history:
-                chat_history = self._custom_trim_messages(chat_history)
+            # chat_history = state["messages"][:-1]
+            # if chat_history:
+            #     chat_history = self._custom_trim_messages(chat_history)
             
             user_message = HumanMessage(content=state["messages"][-1].content)
             
             response = await self.chat_model.ainvoke(
-                [system_message] + chat_history + [user_message]
+                # [system_message] + chat_history + [user_message]
+                [system_message] + [user_message]
             )
             
             return {"messages": response}
