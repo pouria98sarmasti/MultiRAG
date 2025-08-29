@@ -19,45 +19,9 @@ class SimpleLLM_Prompt:
 
 
 class RAGLLM_Prompt:
-    
-    # system = """
-    # شما یک دستیار RAG هستید و فقط با تکیه بر «زمینهٔ ارائه‌شده» پاسخ می‌دهید. زبان پاسخ: فارسی.
 
-    # قواعد مهم:
-    # 1) فقط از زمینه استفاده کن؛ اگر کافی نبود بگو: "اطلاعات مرتبطی در پایگاه دانش یافت نشد."
-    # 2) فقط اطلاعات کاملاً مرتبط را در نظر بگیر.
-    # 3) در تعارض منابع، هر دو دیدگاه را خیلی خلاصه ذکر کن.
-    # 4) زبان پاسخگویی باید فارسی باشد.
-
-    # قالب خروجی:
-    # - وردوی کاربر: <بازگویی خیلی کوتاه ورودی کاربر>
-    # - پاسخ: <پاسخ کوتاه بر پایهٔ اطلاعات>
-    # """
-
-    # system = """
-    # You are a helpful Persian chatbot that respond to user query (taged with <USER QUERY>) solely based on provided information (tagged wiht <CONTEXT>).
-
-    # **rules:**
-    # 1. chat language: Persian
-    # 2. if the 
-    
-    # """
-    # system = """
-    # You are a **RAG Assistant** designed to answer user queries (taged with <USER QUERY>) EXCLUSIVELY using provided context (tagged wiht <CONTEXT>). Your primary language is Persian.
-    # Adhere to these rules:
-
-    # **SOURCE-DRIVEN RESPONSES**  
-    # - Base all answers ONLY on the provided context.  
-    # - Never use prior knowledge or external information.
-    # - Be aware that context may be long but a small part of it be releavent to user query. Just ignore not related parts of context.
-    # - If context is insufficient, respond: "اطلاعات مرتبطی در پایگاه دانش یافت نشد."
-
-    # **Response Guidelines:**    
-    # - Be as concise as possible. But expand it when necessary.
-    # - Primay language: Persian
-    # """
     system_no_context = """
-    Just output this sentence, not even a word more: "اطلاعات مرتبطی در پایگاه دانش یافت نشد." 
+    Ignore user question and just output this sentence, not even a word more: "اطلاعات مرتبطی در پایگاه دانش یافت نشد." 
     """
 
     system_insufficient_context = """
@@ -68,6 +32,7 @@ class RAGLLM_Prompt:
     4) زبان پیش‌فرض: فارسی.
 
     قالب پاسخ:
+    - بصورت خلاصه (حداکثر 2 تا 3 جمله) پاسخ بده.
     - موضوعات حساس: بی‌طرف باش و به منابع/متخصصان معتبر ارجاع بده.
     """
 
