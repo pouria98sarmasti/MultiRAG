@@ -33,6 +33,7 @@ class RAGLLM_Prompt:
 
     قالب پاسخ:
     - بصورت خلاصه (حداکثر 2 تا 3 جمله) پاسخ بده.
+    - زبان پیش‌فرض: فارسی.
     """
 
     system_sufficient_context = """
@@ -51,6 +52,7 @@ class RAGLLM_Prompt:
     </USER QUERY>
 
     Answer user query EXCLUSIVELY using provided context.
+    Your primay language: Persian.
     """
 
 
