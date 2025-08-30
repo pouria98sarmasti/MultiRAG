@@ -13,11 +13,14 @@ from langchain_core.documents import Document
 from src.schema._admin import AdminUploadedDatasetType
 
 
+from src.utils.config import get_config
 from src.utils.logger import app_logger
 
 logger = app_logger.getChild("src.operations._document_handling")
 
 
+CHUNK_SIZE = get_config("rag.chunk_size")
+CHUNK_OVERLAP = get_config("rag.chunk_overlap")
 
 
 class DocumentService:
@@ -145,4 +148,7 @@ class DocumentService:
         return docs
 
 
-document_service = DocumentService()
+document_service = DocumentService(
+    chunk_size=CHUNK_SIZE,
+    chunk_overlap=CHUNK_OVERLAP,
+)

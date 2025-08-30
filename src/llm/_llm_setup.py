@@ -1,9 +1,9 @@
 import os
 
-# from langchain_huggingface.embeddings.huggingface import HuggingFaceEmbeddings
+from langchain_huggingface.embeddings.huggingface import HuggingFaceEmbeddings
 from langchain_ollama import OllamaEmbeddings
 from langchain_ollama import ChatOllama
-# import torch
+import torch
 
 from langchain_core.language_models import BaseChatModel
 from langchain_core.embeddings import Embeddings
@@ -21,7 +21,7 @@ CHAT_NUM_CTX = get_config('llm.chat.num_ctx')
 EMBEDDING_MODEL = get_config('llm.embedding.model')
 OFFLINE = get_config('llm.embedding.offline', True)
 
-# DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
+DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 
 chat_model: BaseChatModel | None = None
@@ -52,23 +52,23 @@ def get_chat_model() -> BaseChatModel:
 
 def get_embedding_model() -> Embeddings:
     global embedding_model
-    # _setup_offline_mode()
-    # if embedding_model is None:
-    #     model_kwargs = {'device': DEVICE, 'trust_remote_code': True}
-    #     encode_kwargs = {'normalize_embeddings': False}
-    #     if OFFLINE:
-    #         model_kwargs['local_files_only'] = True
-    #     embedding_model = HuggingFaceEmbeddings(
-    #         model_name=EMBEDDING_MODEL,
-    #         model_kwargs=model_kwargs,
-    #         encode_kwargs=encode_kwargs,
-    #     )
-    
+    _setup_offline_mode()
     if embedding_model is None:
-        embedding_model = OllamaEmbeddings(
-            model=EMBEDDING_MODEL,
-            base_url=CHAT_BASE_URL,
+        model_kwargs = {'device': DEVICE, 'trust_remote_code': True}
+        encode_kwargs = {'normalize_embeddings': False}
+        if OFFLINE:
+            model_kwargs['local_files_only'] = True
+        embedding_model = HuggingFaceEmbeddings(
+            model_name=EMBEDDING_MODEL,
+            model_kwargs=model_kwargs,
+            encode_kwargs=encode_kwargs,
         )
+    
+    # if embedding_model is None:
+    #     embedding_model = OllamaEmbeddings(
+    #         model=EMBEDDING_MODEL,
+    #         base_url=CHAT_BASE_URL,
+    #     )
     
     return embedding_model
 
