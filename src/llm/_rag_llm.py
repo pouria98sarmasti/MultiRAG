@@ -159,7 +159,8 @@ class RAGLLM(BaseLLM):
         
 
         elif state["does_use_context"] == "no":
-            system_message = self._get_system_prompt(mode="insufficient_context")
+            # system_message = self._get_system_prompt(mode="insufficient_context")
+            system_message = self._get_system_prompt(mode="no_context")
             # chat_history = state["messages"][:-1]
             # if chat_history:
             #     chat_history = self._custom_trim_messages(chat_history)
