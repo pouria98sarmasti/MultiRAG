@@ -127,7 +127,7 @@ class RAGLLM(BaseLLM):
     async def _generation_node(self, state: RAGLLMStates, config: RunnableConfig):
         
         if state["context"] == "":
-            system_message = self._get_system_prompt(mode="no_context")
+            system_message = self._get_system_prompt(mode="sufficient_context")
             
             user_message = HumanMessage(content=state["messages"][-1].content)
             
@@ -160,7 +160,7 @@ class RAGLLM(BaseLLM):
 
         elif state["does_use_context"] == "no":
             # system_message = self._get_system_prompt(mode="insufficient_context")
-            system_message = self._get_system_prompt(mode="no_context")
+            system_message = self._get_system_prompt(mode="sufficient_context")
             # chat_history = state["messages"][:-1]
             # if chat_history:
             #     chat_history = self._custom_trim_messages(chat_history)
